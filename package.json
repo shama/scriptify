@@ -1,0 +1,30 @@
+{
+  "name": "scriptify",
+  "version": "0.1.0",
+  "description": "Browserify inline script tags in HTML",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/shama/scriptify.git"
+  },
+  "keywords": [
+    "browserify",
+    "inline",
+    "script"
+  ],
+  "author": "Kyle Robinson Young",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/shama/scriptify/issues"
+  },
+  "scripts": {
+    "start": "node test.js"
+  },
+  "dependencies": {
+    "through": "~2.3.4",
+    "cheerio": "~0.12.0",
+    "browserify": "~2.18.1"
+  },
+  "devDependencies": {
+  }
+}
