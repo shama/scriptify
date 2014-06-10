@@ -6,6 +6,7 @@ var spawn = require('child_process').spawn
 
 module.exports = function(opts) {
   opts = opts || {}
+  opts.basedir = opts.basedir || process.cwd()
   opts.selector = opts.selector || 'script[type="text/browserify"]'
   opts.args = opts.args || []
   
@@ -21,13 +22,17 @@ module.exports = function(opts) {
     var at = 0;
     (function done() {
       if (at >= scripts.length) {
-        self.queue($.html())
+        self.queue($.html({decodeEntities: false}))
         self.queue(null)
       } else {
         var script = $(scripts[at])
-        bfy(script.text(), opts.args, function(text) {
+        var entry = script.text()
+        var src = script.attr('src')
+        if (src) entry = fs.readFileSync(path.join(opts.basedir, src)).toString()
+        bfy(entry, opts.args, function(text) {
           script.attr('type', 'text/javascript')
-          replaceText.call(script, text)
+          script.attr('src', null)
+          script.text(text)
           at++
           done()
         })
@@ -55,7 +60,7 @@ function bfy(text, args, done) {
   var b = spawn(whichbfy(), args)
   b.stderr.on('data', function(buf) {
     buf = String(buf).replace(/^\s+|\s+$/g, '')
-    errors += "console.error('" + buf + "')"
+    errors += 'console.error("' + buf + '")'
   })
   b.stdout.on('data', function(buf) {
     bundled += buf
@@ -67,22 +72,5 @@ function bfy(text, args, done) {
     } else {
       done(bundled)
     }
-  })
-}
-
-// because cheerio encodes everything
-function replaceText(str) {
-  var updateDOM = require('cheerio/lib/parse').update
-  var elem = {
-    data: str,
-    type: 'text',
-    parent: null,
-    prev: null,
-    next: null,
-    children: []
-  }
-  this.each(function(i, el) {
-    el.children = elem
-    updateDOM(el.children, el)
   })
 }
