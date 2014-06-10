@@ -1,6 +1,6 @@
 {
   "name": "scriptify",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Browserify inline script tags in HTML",
   "main": "index.js",
   "repository": {
@@ -23,7 +23,7 @@
   "dependencies": {
     "browserify": "^4.1.9",
     "cheerio": "cheeriojs/cheerio",
-    "through": "~2.3.4"
+    "through": "^2.3.4"
   },
   "devDependencies": {}
 }
