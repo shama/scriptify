@@ -9,7 +9,7 @@ module.exports = function(opts) {
   opts.basedir = opts.basedir || process.cwd()
   opts.selector = opts.selector || 'script[type="text/browserify"]'
   opts.args = opts.args || []
-  
+
   var html = ''
   return through(write, end)
 
@@ -28,7 +28,13 @@ module.exports = function(opts) {
         var script = $(scripts[at])
         var entry = script.text()
         var src = script.attr('src')
-        if (src) entry = fs.readFileSync(path.join(opts.basedir, src)).toString()
+        if (src) {
+          if (!fs.existsSync(src)) {
+            at++
+            return done()
+          }
+          entry = fs.readFileSync(src).toString()
+        }
         bfy(entry, opts.args, function(text) {
           script.attr('type', 'text/javascript')
           script.attr('src', null)
