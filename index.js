@@ -59,6 +59,10 @@ function bfy(text, args, done) {
     return done(text)
   }
   fs.writeFileSync(tmpfile, text)
+ let index = args.indexOf('-e');
+  if (index > -1) {
+    args.splice(index, 2);
+  }
   args.unshift('-e', tmpfile)
 
   var bundled = ''
